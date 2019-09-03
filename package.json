@@ -1,0 +1,31 @@
+{
+  "name": "company-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlos-rodrigo/company-challenge.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/carlos-rodrigo/company-challenge/issues"
+  },
+  "homepage": "https://github.com/carlos-rodrigo/company-challenge#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.5.5",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^24.9.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^24.9.0"
+  },
+  "jest": {
+    "transform": {
+      "\\.js$": "babel-jest"
+    }
+  }
+}
