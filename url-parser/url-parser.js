@@ -1,66 +1,53 @@
+const _SLASH = '/';
+const _TEXT_REGEX = "[a-zA-Z]+";
+
 export default class UrlParser {
 
     constructor(urlFormat, paramIdentifier){
-      this.urlFormat = urlFormat;
-      this.paramIdentifier = paramIdentifier;
+        this.urlFormat = urlFormat;
+        this.paramIdentifier = paramIdentifier;
+        this.regex = paramIdentifier + _TEXT_REGEX;
     }
 
     parse(url){
         if(this.isUrlMatchWithFormat(url)){
-            var values = this.getValuesFromUrl(url);
-            return this.buildMapWithValues(values);
+            return this.getValuesFromUrl(url);
         }else{
             return { message: "the url not match with the format" };
         }
     }
 
     isUrlMatchWithFormat(url){
-        let parts = url.split('/');
-        let formatParts = this.urlFormat.split('/');
+        let parts = this.getPartsOfAnUrl(url);
+        let formatParts = this.getPartsOfAnUrl(this.urlFormat);
 
         return parts.length == formatParts.length
     }
 
     getValuesFromUrl(url){
-        let urlParts = url.split('/').filter(p => p !== '');
-        let formatParts = this.urlFormat.split('/').filter(p => p !== '');
+        let urlParts = this.getPartsOfAnUrl(url);
+        let formatParts = this.getPartsOfAnUrl(this.urlFormat);
 
-        let values = [];
+        let mapToReturn = new Object();
 
-        for(let i = 0; i < urlParts; i++){
+        for(let i = 0; i < urlParts.length; i++){
             let value = urlParts[i];
             let param = formatParts[i];
-            if(this.isParam(param))
-                values.push(value);
+            if(this.isParam(param)){
+                mapToReturn[param.replace(this.paramIdentifier, '')] = isNaN(Number(value)) ? value : Number(value);
+            }
         }
 
-        return values;
+        return mapToReturn;
     }
 
     isParam(param){
-        let regex = new RegExp(this.paramIdentifier + "[a-zA-Z]+");
+        let regex = new RegExp(this.regex);
         return regex.test(param);
     }
 
-    buildMapWithValues(values){
-        let map = new Object();
-        let params = this.getParamsNamesFromFormatUrl();
-        for(let i = 0; i < params.length; i++){
-            map[params[i]] = Number(values[i]) != NaN ? Number(values[i]): values[i];
-        }
-
-        return map;
-    }
-
-    getParamsNamesFromFormatUrl(){
-        let regex = this.paramIdentifier + "[a-zA-Z]+";
-        let originalParams = this.urlFormat.match(regex);
-        let finalParams = [];
-
-        originalParams.forEach(function(element){
-            finalParams.push(element.replace(':', ''));
-        });
-
-        return finalParams;
+    
+    getPartsOfAnUrl(url){
+        return url.split(_SLASH).filter(p => p !== '');
     }
 };
